@@ -223,4 +223,4 @@ elif page == "About":
 # Footer
 st.markdown("---")
 st.markdown("### Built with ❤️ using Agile Methodology & Machine Learning")
-st.markdown("*Customer Churn Prediction System © 2024*")
+st.markdown("*Customer Churn Prediction System © November 2025*")
