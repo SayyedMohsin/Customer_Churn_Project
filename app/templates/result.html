@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        {% if error %}
+        <div class="alert alert-danger">
+            <h4><i class="fas fa-exclamation-triangle"></i> Prediction Error</h4>
+            <p>{{ error }}</p>
+            <a href="/" class="btn btn-outline-danger">Try Again</a>
+        </div>
+        {% else %}
+        <!-- Prediction Results -->
+        <div class="card {% if 'WILL CHURN' in prediction %}risk-high{% else %}risk-low{% endif %}">
+            <div class="card-header {% if 'WILL CHURN' in prediction %}bg-danger{% else %}bg-success{% endif %} text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-chart-line"></i> 
+                    Prediction Results
+                    <span class="badge bg-warning float-end">{{ model_badge }}</span>
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- Prediction Header -->
+                <div class="text-center mb-4">
+                    <h2 class="{% if 'WILL CHURN' in prediction %}text-danger{% else %}text-success{% endif %}">
+                        {{ prediction }}
+                    </h2>
+                    <div class="display-4 fw-bold {% if 'WILL CHURN' in prediction %}text-danger{% else %}text-success{% endif %}">
+                        {{ probability }}%
+                    </div>
+                    <small class="text-muted">Probability of Churn</small>
+                    <br>
+                    <span class="badge {% if '85%' in model_used %}bg-success{% else %}bg-info{% endif %} mt-2">
+                        <i class="fas fa-cogs"></i> {{ model_used }}
+                    </span>
+                </div>
+
+                <!-- Risk Assessment -->
+                <div class="alert {% if 'WILL CHURN' in prediction %}alert-danger{% else %}alert-success{% endif %}">
+                    <h5><i class="fas fa-exclamation-circle"></i> {{ risk_level }}</h5>
+                    <p class="mb-0">{{ recommendation }}</p>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="row text-center mb-4">
+                    <div class="col-md-3">
+                        <strong>Confidence:</strong><br>
+                        <span class="badge {% if confidence == 'High' %}bg-success{% elif confidence == 'Medium' %}bg-warning{% else %}bg-danger{% endif %}">
+                            {{ confidence }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Risk Level:</strong><br>
+                        <span class="badge {% if risk_level == 'High Risk' %}bg-danger{% elif risk_level == 'Medium Risk' %}bg-warning{% else %}bg-success{% endif %}">
+                            {{ risk_level }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Model Type:</strong><br>
+                        <span class="badge {% if '85%' in model_used %}bg-success{% else %}bg-info{% endif %}">
+                            {{ model_badge }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Accuracy:</strong><br>
+                        <span class="badge {% if '85%' in model_used %}bg-success{% else %}bg-warning{% endif %}">
+                            {% if '85%' in model_used %}85%+{% else %}Estimate{% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Customer Summary -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-user"></i> Customer Summary</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Tenure:</strong> {{ form_data.tenure }} months<br>
+                                <strong>Monthly Charges:</strong> ${{ form_data.MonthlyCharges }}<br>
+                                <strong>Contract:</strong> {{ form_data.Contract }}<br>
+                                <strong>Senior Citizen:</strong> {{ "Yes" if form_data.SeniorCitizen == 1 else "No" }}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Internet Service:</strong> {{ form_data.InternetService }}<br>
+                                <strong>Phone Service:</strong> {{ form_data.PhoneService }}<br>
+                                <strong>Paperless Billing:</strong> {{ form_data.PaperlessBilling }}<br>
+                                <strong>Payment Method:</strong> {{ form_data.PaymentMethod }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="text-center">
+                    <a href="/" class="btn btn-primary">
+                        <i class="fas fa-redo"></i> New Prediction
+                    </a>
+                    <a href="/dashboard" class="btn btn-outline-success">
+                        <i class="fas fa-chart-bar"></i> View Analytics
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
